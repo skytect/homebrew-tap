@@ -25,10 +25,11 @@ jobs:
           ln -s "$GITHUB_WORKSPACE" "$tap"
       - name: Style
         run: brew style skytect/tap
-      - name: Audit
-        run: brew audit --cask --online skytect/tap/noren
+      # As a user installs it: the fully qualified name trusts this cask alone
       - name: Install
         run: brew install --cask skytect/tap/noren
+      - name: Audit
+        run: brew audit --cask --online skytect/tap/noren
       - name: Signed with the release certificate, quarantine cleared
         run: |
           codesign --verify --deep --strict /Applications/Noren.app
