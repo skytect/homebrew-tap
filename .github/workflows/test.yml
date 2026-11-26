@@ -28,7 +28,10 @@ jobs:
       # As a user installs it: the fully qualified name trusts this cask alone
       - name: Install
         run: brew install --cask skytect/tap/noren
+      # --online asks GitHub about the repository, past the runner IP's anonymous limit only with a token
       - name: Audit
+        env:
+          HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }}
         run: brew audit --cask --online skytect/tap/noren
       - name: Signed with the release certificate, quarantine cleared, the command linked
         run: |
