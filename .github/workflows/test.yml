@@ -1,0 +1,40 @@
+name: Test
+
+# Each cask, as a user gets it: style, audit, then an install on a clean Mac
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  noren:
+    runs-on: macos-26
+    timeout-minutes: 20
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      HOMEBREW_NO_ANALYTICS: 1
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Tap this checkout
+        run: |
+          tap="$(brew --repository)/Library/Taps/skytect/homebrew-tap"
+          mkdir -p "$(dirname "$tap")"
+          ln -s "$GITHUB_WORKSPACE" "$tap"
+      - name: Style
+        run: brew style skytect/tap
+      - name: Audit
+        run: brew audit --cask --online skytect/tap/noren
+      - name: Install
+        run: brew install --cask skytect/tap/noren
+      - name: Signed with the release certificate, quarantine cleared
+        run: |
+          codesign --verify --deep --strict /Applications/Noren.app
+          codesign --display --verbose=2 /Applications/Noren.app 2>&1 | grep -x 'Authority=noren'
+          if xattr /Applications/Noren.app | grep -q com.apple.quarantine; then
+            echo "::error::Noren.app is still quarantined"
+            exit 1
+          fi
+          noren display-mode
