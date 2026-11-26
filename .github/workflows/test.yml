@@ -30,7 +30,7 @@ jobs:
         run: brew install --cask skytect/tap/noren
       - name: Audit
         run: brew audit --cask --online skytect/tap/noren
-      - name: Signed with the release certificate, quarantine cleared
+      - name: Signed with the release certificate, quarantine cleared, the command linked
         run: |
           codesign --verify --deep --strict /Applications/Noren.app
           codesign --display --verbose=2 /Applications/Noren.app 2>&1 | grep -x 'Authority=noren'
@@ -38,4 +38,4 @@ jobs:
             echo "::error::Noren.app is still quarantined"
             exit 1
           fi
-          noren display-mode
+          test "$(readlink "$(command -v noren)")" = /Applications/Noren.app/Contents/MacOS/noren
