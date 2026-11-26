@@ -1,7 +1,7 @@
 # Bumped by noren's release workflow (github.com/skytect/noren, .github/workflows/release.yml)
 cask "noren" do
-  version "0.0.0"
-  sha256 "0000000000000000000000000000000000000000000000000000000000000000"
+  version "0.1.0"
+  sha256 "570429d6ec599981826cb2e5ad5d202a05443c22130837ac0f72d643ffd6d3eb"
 
   url "https://github.com/skytect/noren/releases/download/#{version}/Noren-#{version}.zip"
   name "Noren"
